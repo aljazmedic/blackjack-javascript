@@ -24,11 +24,6 @@ function shuffleDeck(deck) {
 	}
 }
 
-/*function getCardString(card) {
-	//translating tuple to words using arrays
-	return  values[card[0]]+ ' of ' + suitsWords[card[1]] + '\n'
-}*/
-
 function getCardString(card) {
 	let ret = ""
 	//king, ace, queen, jack
@@ -51,7 +46,7 @@ function getCards(num){
 function checkForEndOfGame() {
     if(playerStay){
         while(dealerHand.scores[0] <= 17){
-            dealerHand.add(getCard(1));
+            dealerHand.add(getCards(1));
         }
     }
 
@@ -71,7 +66,6 @@ function checkForEndOfGame() {
 			}
 		}
 	}
-	
 	showStatus();
 }
 
@@ -98,10 +92,6 @@ function showStatus() {
 			else {
 				textArea.innerText += "DEALER WINS";
 			}
-			newGameButton.style.display = 'inline';
-			hitButton.style.display = 'none';
-			stayButton.style.display = 'none';
-            splitButton.style.display = 'none';
 		}
 };
 
@@ -116,6 +106,7 @@ function getCardValue(card) {
 function Hand(){
 	this.cards = [[]];
 	this.scores = [0];
+    this.guiScore = "";
 
 	this.add = function(numOfCardsToAdd){
 		for(let i = 0; i < this.cards.length;i++){
@@ -125,7 +116,10 @@ function Hand(){
 	}
 
 	this.evaluate = function(){
+		this.guiScore = "";
+		let logAll = true;
 		for (let pack = 0; pack < this.cards.length; pack++) {
+			let sumForGUI = 0;
 			let hasAce = false;
 			this.scores[pack] = 0;
 			for (let card of this.cards[pack]){
@@ -133,22 +127,28 @@ function Hand(){
 				if(card[0] == 0){
 					hasAce = true;
 				}
+				if(!card[2]){ //ce ni vidna doda vprasaj
+					logAll = false;
+					//odsteje skrito karto, ker se potem pristeje ves sum
+					sumForGUI -= getCardValue(card);
+				}
 			}
+
+			sumForGUI+=this.scores[pack];
+			sumForGUI = "(score: " + sumForGUI;
+
+			if(!logAll)
+				sumForGUI+="+?";
+
+			this.guiScore+=sumForGUI +") ";
 			if (hasAce && (this.scores[pack] + 10 <= 21)){
 				this.scores[pack] += 10;
 			}
-
-            if(this.scores[pack] > 21){
-                playerWon = false;
-                gameOver = true;
-                checkForEndOfGame();
-            }
 		}
 	}
 
-	this.log = function(){
+	/*this.log = function(){
 		let ret;
-
 		for (let pack = 0; pack < this.cards.length; pack++) {
 			if(this.cards.length == 1){ //samo en kupcek kart
 				ret = "";
@@ -164,7 +164,7 @@ function Hand(){
 			ret += '(score: ' + this.scores[pack] + ')\n\n';
 		}
 		return ret;
-	}
+	}*/
 
     this.canSplit = function(){
         if(this.cards.length == 1 && this.cards[0][0][0] == this.cards[0][1][0]){ //prvi kupcek, prva karta, vrednost
@@ -176,10 +176,12 @@ function Hand(){
     this.split = function(){
         this.cards.push([this.cards[0].pop()]);
         this.scores.push(0);
+        this.evaluate();
     }
 
     this.switchVisibility = function(pack, card){
     	let vis = this.cards[pack][card][2];
     	this.cards[pack][card][2] = !vis;
+    	this.evaluate()
     }
 }

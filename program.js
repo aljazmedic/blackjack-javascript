@@ -33,9 +33,6 @@ function setup() {
 	playerHand.add(2);
 	dealerHand.switchVisibility(0, 1);
 
-	//newGameButton = createCanvas("New game");
-	//newGameButton.mousePressed()
-
 	createCanvas(600, 600);
 
 	hitButton = createButton("Hit!")
@@ -48,6 +45,7 @@ function setup() {
 	stayButton = createButton("Stay!")
 	stayButton.mousePressed(function(){
 		playerStay = true;
+		dealerHand.switchVisibility(0, 1);
 		checkForEndOfGame();
 		showStatus();
 	});
@@ -56,37 +54,45 @@ function setup() {
     	splitButton = createButton("Split!")
 		splitButton.mousePressed(function(){
 		    playerHand.split();
+		    splitButton.remove();
 		});
     }
 }
 
 function draw() {
 	background(68, 201, 48);
+
 	drawCards(width/2, 150, dealerHand.cards);
 	drawCards(width/2, height-150, playerHand.cards);
+
+	fill(0);
+	stroke(0);
+
+	text(trim(dealerHand.guiScore), width/2, 50);
+	text(trim(playerHand.guiScore), width/2, height-50);
 }
 
 function drawCards(posx, posy, cards){
 	let space = 4;
 	let cardw = 50;
 
-	let dY = cardw*1.56*0.9+space*2
+	let dY = cardw*1.56+space*2;
 	let dX = space+cardw;
 
 	for (var j = 0; j < cards.length; j++) {
 		cardPack = cards[j];
 
 		let len = cardPack.length;
-		let startX = posx-((len*cardw + (len-1)*space))/2
+		let startX = posx - ((len*cardw + (len-1)*space))/2
 
 		for(let i = 0; i < cardPack.length; i++){
-			let card = cardPack[i]
-			fill(255)
-			stroke(0)
-			rectMode(CENTER)
-			rect(startX+i*dX, posy-dY*j, cardw, cardw*1.56, 6)
+			let card = cardPack[i];
+			fill(255);
+			stroke(0);
+			rectMode(CENTER);
+			rect(startX + i*dX, posy - dY*j, cardw, cardw*1.56, 6);
 			if(card[2]){
-				textAlign(CENTER)
+				textAlign(CENTER);
 				textSize(cardw/2.5);
 				if(card[1] < 2){
 					fill(239, 11, 11);
@@ -100,7 +106,7 @@ function drawCards(posx, posy, cards){
 			}else{
 				fill(102, 64, 35);
 				stroke(0);
-				rect(startX+i*dX, posy-dY*j, cardw*0.9, cardw*1.56*0.9, 6*0.9)
+				rect(startX + i*dX, posy - dY*j, cardw*0.9, cardw*1.56*0.9, 6*0.9)
 			}
 		}
 	}
