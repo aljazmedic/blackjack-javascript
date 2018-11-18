@@ -4,7 +4,8 @@ function createDeck(numberOfDecks) {
 		for (let suitsIdx = 0; suitsIdx < suits.length; suitsIdx++) {
 			for (let valueIdx = 0; valueIdx < values.length; valueIdx++) {
 				//creating tuples of numbers to use less space
-				let card = [valueIdx, suitsIdx]; 
+				let card = [valueIdx, suitsIdx, true]; 
+							//vrednost, barva, skrita		
 				deck.push(card);
 			}
 		}
@@ -29,14 +30,14 @@ function shuffleDeck(deck) {
 }*/
 
 function getCardString(card) {
-	let ret = "|"
+	let ret = ""
 	//king, ace, queen, jack
 	if([0,10,11,12].includes(card[0])){ 
 		ret+=values[card[0]].charAt(0);
 	}else{
 		ret+=""+(card[0]+1)
 	}
-	return ret+ " "+ suits[card[1]] + '|'
+	return ret+ " "+ suits[card[1]]
 }
 
 function getCards(num){
@@ -119,7 +120,6 @@ function Hand(){
 	this.add = function(numOfCardsToAdd){
 		for(let i = 0; i < this.cards.length;i++){
 			this.cards[i] = this.cards[i].concat(getCards(numOfCardsToAdd));
-			console.log(this.cards)
 		}
 		this.evaluate();
 	}
@@ -176,5 +176,10 @@ function Hand(){
     this.split = function(){
         this.cards.push([this.cards[0].pop()]);
         this.scores.push(0);
+    }
+
+    this.switchVisibility = function(pack, card){
+    	let vis = this.cards[pack][card][2];
+    	this.cards[pack][card][2] = !vis;
     }
 }
