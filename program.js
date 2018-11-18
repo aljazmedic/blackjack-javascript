@@ -94,12 +94,12 @@ function shuffleDeck(deck) {
 	}
 }
 
-function getCardString(card) {
+/*function getCardString(card) {
 	//translating tuple to words using arrays
 	return  values[card[0]]+ ' of ' + suitsWords[card[1]] + '\n'
-}
+}*/
 
-function getCardStringVisual(card) {
+function getCardString(card) {
 	let ret = "|"
 	//king, ace, queen, jack
 	if([0,10,11,12].includes(card[0])){ 
@@ -229,10 +229,6 @@ function Hand(){
 
 			for (let i = 0; i < this.cards[pack].length; i++) {
 				ret += getCardString(this.cards[pack][i]);
-			}
-
-			for (let i = 0; i < this.cards[pack].length; i++) {
-				ret += getCardStringVisual(this.cards[pack][i]);
 			}
 
 			ret += "\n";
