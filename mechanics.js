@@ -44,56 +44,45 @@ function getCards(num){
 }
 
 function checkForEndOfGame() {
+
     if(playerStay){
         while(dealerHand.scores[0] <= 17){
-            dealerHand.add(getCards(1));
+        	console.log(dealerHand.scores[0])
+            dealerHand.add(1);
+      		setTimeout(render(), 2000);
         }
+
+        if(dealerHand.scores[0] > 21){
+	    	playerWon();
+	    	return;
+	    }else{
+	    	for (let pack = 0; pack < playerHand.cards.length; pack++) {
+	    		if(playerHand.scores[pack] >= dealerHand.scores[0]){
+	    			playerWon();
+	    			return;
+	    		}
+		    	if(playerHand.scores[pack] > 21){ //nisem zihr ce sm lahko sploh pride
+		    		dealerWon();
+		    		return;
+		    	}
+			}
+	    }
+	    dealerWon();
+	    return;
     }
 
-	for (let pack = 0; pack < playerHand.cards.length; pack++) {
-		if (playerHand.scores[pack] > 21) {
-			playerWon = false;
-			gameOver = true;
-		}
-		else if (dealerHand.scores[0] > 21) {
-			playerWon = true;
-			gameOver = true;
-		}
-
-		if (!gameOver) {
-			if (playerHand.scores[pack] > dealerHand.scores[0]) {
-				playerWon = true;
-			}
-		}
+    for (let pack = 0; pack < playerHand.cards.length; pack++) {
+    	if(playerHand.scores[pack] > 21){
+    		dealerWon();
+    		return;
+    	}
 	}
-	showStatus();
+
+	if(dealerHand.scores[0] > 21){
+    	playerWon();
+    	return;
+    }	
 }
-
-function showStatus() {
-	if (!gameStarted) {
-		textArea.innerText = 'Welcome to Blackjack!';
-		return; 
-	}
-
-	let dealerString = dealerHand.log();
-	let playerString = playerHand.log();
-
-	textArea.innerText =
-		'Dealer has: \n' +
-		dealerString +
-
-		'Player has: \n' +
-		playerString;
-
-		if (gameOver) {
-			if (playerWon) {
-				textArea.innerText += "YOU WIN!";
-			}
-			else {
-				textArea.innerText += "DEALER WINS";
-			}
-		}
-};
 
 function getCardValue(card) {
 	if(card[0] >= 9){
@@ -182,6 +171,18 @@ function Hand(){
     this.switchVisibility = function(pack, card){
     	let vis = this.cards[pack][card][2];
     	this.cards[pack][card][2] = !vis;
-    	this.evaluate()
+    	this.evaluate();
     }
+}
+
+function playerWon(){
+	drawWinner("Player won!");
+	console.log("Player won!");
+	noLoop();
+}
+
+function dealerWon(){
+	drawWinner("Dealer won!");
+	console.log("Dealer won!");
+	noLoop();
 }

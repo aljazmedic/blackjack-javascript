@@ -11,17 +11,13 @@ let values = ["Ace","Two","Three","Four","Five","Six","Seven","Eight","Nine","Te
 let textArea = document.getElementById("text-area");
 
 // Global game Variables
-let gameOver;
 let gameStarted = false;
 let playerStay;
-let playerWon;
 let dealerHand;
 let playerHand;
 let deck;
 
 function setup() {
-	gameOver = false;
-	playerWon = false;
     playerStay = false;
 
 	playerHand = new Hand();
@@ -38,16 +34,12 @@ function setup() {
 	hitButton = createButton("Hit!")
 	hitButton.mousePressed(function(){
 		playerHand.add(1);
-		checkForEndOfGame();
-		showStatus();
 	});
 
 	stayButton = createButton("Stay!")
 	stayButton.mousePressed(function(){
-		playerStay = true;
 		dealerHand.switchVisibility(0, 1);
-		checkForEndOfGame();
-		showStatus();
+		playerStay = true;
 	});
 
     if(playerHand.canSplit()){
@@ -60,6 +52,11 @@ function setup() {
 }
 
 function draw() {
+	checkForEndOfGame();
+	render();
+}
+
+function render(){
 	background(68, 201, 48);
 
 	drawCards(width/2, 150, dealerHand.cards);
@@ -72,10 +69,12 @@ function draw() {
 	text(trim(playerHand.guiScore), width/2, height-50);
 }
 
+
+
 function drawCards(posx, posy, cards){
 	let space = 4;
 	let cardw = 50;
-
+	
 	let dY = cardw*1.56+space*2;
 	let dX = space+cardw;
 
@@ -111,4 +110,14 @@ function drawCards(posx, posy, cards){
 		}
 	}
 	
+}
+
+
+function drawWinner(winnerName){
+	background(68, 201, 48);
+	textAlign(CENTER);
+	textSize(64);
+	stroke(0);
+	fill(0);
+	text(winnerName, width/2, height/2)
 }
