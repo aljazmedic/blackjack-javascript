@@ -52,8 +52,13 @@ function setup() {
 }
 
 function draw() {
-	checkForEndOfGame();
-	render();
+	if(!checkForEndOfGame()){
+		render();
+	}else{
+		hitButton.remove();
+		stayButton.remove();
+	}
+	
 }
 
 function render(){
@@ -114,10 +119,10 @@ function drawCards(posx, posy, cards){
 
 
 function drawWinner(winnerName){
-	background(68, 201, 48);
 	textAlign(CENTER);
 	textSize(64);
 	stroke(0);
 	fill(0);
-	text(winnerName, width/2, height/2)
+	text(winnerName, width/2, height/2);
+	noLoop();
 }

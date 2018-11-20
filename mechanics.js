@@ -47,40 +47,39 @@ function checkForEndOfGame() {
 
     if(playerStay){
         while(dealerHand.scores[0] <= 17){
-        	console.log(dealerHand.scores[0])
             dealerHand.add(1);
       		setTimeout(render(), 2000);
         }
 
         if(dealerHand.scores[0] > 21){
 	    	playerWon();
-	    	return;
+	    	return true;
 	    }else{
 	    	for (let pack = 0; pack < playerHand.cards.length; pack++) {
 	    		if(playerHand.scores[pack] >= dealerHand.scores[0]){
 	    			playerWon();
-	    			return;
+	    			return true;
 	    		}
 		    	if(playerHand.scores[pack] > 21){ //nisem zihr ce sm lahko sploh pride
 		    		dealerWon();
-		    		return;
+		    		return true;
 		    	}
 			}
 	    }
 	    dealerWon();
-	    return;
+	    return true;
     }
 
     for (let pack = 0; pack < playerHand.cards.length; pack++) {
     	if(playerHand.scores[pack] > 21){
     		dealerWon();
-    		return;
+    		return true;
     	}
 	}
 
 	if(dealerHand.scores[0] > 21){
     	playerWon();
-    	return;
+    	return true;
     }	
 }
 
@@ -176,13 +175,13 @@ function Hand(){
 }
 
 function playerWon(){
+	render();
 	drawWinner("Player won!");
 	console.log("Player won!");
-	noLoop();
 }
 
 function dealerWon(){
+	render();
 	drawWinner("Dealer won!");
 	console.log("Dealer won!");
-	noLoop();
 }
